@@ -1,7 +1,8 @@
--- CreateTable
-CREATE TABLE "Book" (
-    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    "title" TEXT NOT NULL,
-    "author" TEXT NOT NULL,
-    "isbn" TEXT NOT NULL
+CREATE TABLE Book (
+    id SERIAL PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    author VARCHAR(255) NOT NULL,
+    isbn VARCHAR(13) UNIQUE NOT NULL,
+    price DECIMAL(10, 2) NOT NULL,
+    availableStock INT NOT NULL
 );
