@@ -1,6 +1,7 @@
 <template>
   <div class="book-container">
-    <div class="book-card">
+    <span v-if="oneBookData.length==0" class="loader"></span>
+    <div v-else class="book-card">
       <img class="book-cover" :src="this.mainImage" alt="Book Cover" />
       <h2 class="book-title">{{ this.oneBookData.title }}</h2>
       <p class="book-author">{{ this.oneBookData.author }}</p>
@@ -76,6 +77,7 @@ export default {
 </script>
 
 <style scoped>
+@import '../css/loader.css';
 .book-container {
   display: flex;
   justify-content: center;

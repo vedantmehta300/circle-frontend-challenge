@@ -2,9 +2,10 @@
   <div class="landing-page">
     <h1 class="sticky">Welcome to our Bookstore!</h1>
     <div class="backImage"></div>
-
-    <div class="books-list">
-      <div v-for="book in bookData" :key="book.id" class="book-card">
+    
+    <div  class="books-list">
+      <span v-if="bookData.length==0" class="loader"></span>
+      <div v-else v-for="book in bookData" :key="book.id" class="book-card">
         <img :src="getRandomBookCover()" alt="Book Cover" class="book-cover" />
         <div class="book-details">
           <h2>{{ book.title }}</h2>
@@ -78,6 +79,7 @@ export default {
 </script>
 
 <style scoped>
+@import '../css/loader.css';
 .backImage {
   background-image: url("../images/book5.jpg");
   height: 100vmin;
@@ -172,4 +174,6 @@ h2 {
   margin-top: 20px;
   width: 90%;
 }
+
+      
 </style>
