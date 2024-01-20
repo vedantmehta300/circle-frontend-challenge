@@ -1,19 +1,29 @@
 <template>
   <div class="book-container">
-    <span v-if="oneBookData.length==0" class="loader"></span>
+    <span v-if="oneBookData.length == 0" class="loader"></span>
     <div v-else class="book-card">
-      <img class="book-cover" :src="this.mainImage" alt="Book Cover" />
-      <h2 class="book-title">{{ this.oneBookData.title }}</h2>
-      <p class="book-author">{{ this.oneBookData.author }}</p>
-      <p class="book-isbn">ISBN: {{ this.oneBookData.isbn }}</p>
-      <p class="book-price">Price: ${{ this.oneBookData.price }}</p>
-      <p class="book-stock">
-        Available Stock: {{ this.oneBookData.availableStock }}
-      </p>
-      <button class="purchase-button" @click="purchaseBook(this.bookId)">
-        Purchase
-      </button>
+      <div class="book-main">
+        <img class="book-cover" :src="this.mainImage" alt="Book Cover" />
+      </div>
+      <div class="book-details">
+        <div class="book-d">
+          <h2 class="book-title">{{ this.oneBookData.title }}</h2>
+          <p class="book-author">{{ this.oneBookData.author }}</p>
+          <p class="book-isbn">ISBN: {{ this.oneBookData.isbn }}</p>
+          <p class="book-price">Price: ${{ this.oneBookData.price }}</p>
+          <p class="book-stock">
+            Available Stock: {{ this.oneBookData.availableStock }}
+          </p>
+          <button class="purchase-button" @click="purchaseBook(this.bookId)">
+            Purchase
+          </button>
+        </div>
+      </div>
     </div>
+    <h1 class="otherBooks" v-if="oneBookData.length !== 0">
+      See Other Popluar Books
+    </h1>
+    <PopularBook v-if="oneBookData.length !== 0" />
   </div>
 </template>
 
@@ -22,16 +32,26 @@ import axios from "axios";
 import bookLib from "../images/bookLib.jpg";
 import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
+import PopularBook from "./PopularBook.vue";
 
 export default {
   props: ["id"],
-
+  components: { PopularBook },
   data() {
     return {
       bookId: null,
       oneBookData: [],
       mainImage: "",
     };
+  },
+  watch: {
+    id(val) {
+      if (val && val !== null) {
+        this.getBookData(val);
+      } else {
+        // do nothing//
+      }
+    },
   },
   computed() {},
   created() {
@@ -77,46 +97,84 @@ export default {
 </script>
 
 <style scoped>
-@import '../css/loader.css';
+@import "../css/loader.css";
+
 .book-container {
-  display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  margin-right: auto;
+  margin-left: auto;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  position: relative;
+  overflow: hidden;
+}
 
-  font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
-    "Lucida Sans", Arial, sans-serif;
+.book-container::before {
+  content: "";
+  position: absolute;
+  top: -5px;
+  left: -5px;
+  right: -5px;
+  bottom: -5px;
+  background: linear-gradient(45deg, #3498db, #2980b9, #3498db, #2980b9);
+  transform: rotate(2deg);
+  z-index: -1;
 }
 
 .book-card {
-  max-width: 400px;
-  border: 2px solid red;
+  border: 2px solid #3498db;
   border-radius: 8px;
   width: 100%;
-  background-color: rgb(216, 86, 86);
+  background: linear-gradient(135deg, #3498db, #2980b9);
   border-radius: 16px;
   padding: 20px;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
   text-align: center;
-  transition: transform 0.3s ease-in-out;
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
   overflow: hidden;
   transform: scale(1.05);
-  font-size: 2vw;
+  font-size: 1.5rem;
+  margin-bottom: auto;
+  margin-right: 1vw;
+  display: flex;
+}
+.book-main {
+  margin-left: 5%;
+}
+.book-card:hover {
+  transform: scale(1.1);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
 }
 
 .book-cover {
   width: 100%;
-  max-height: 200px;
+  height: 100%;
   object-fit: cover;
   border-radius: 8px;
   margin-bottom: 15px;
 }
+.book-details {
+  width: 100%;
+  margin-left: 2%;
+}
+.book-d {
+  margin-right: auto;
+  float: left;
+}
 
 .book-title {
-  font-size: 1.8rem;
+  font-size: 2rem;
   margin-bottom: 10px;
-  color: #333;
-  background-color: #ffffff;
+  color: #ffffff;
+  text-decoration: underline;
+  padding: 10px;
+  border-radius: 8px;
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
+}
+.otherBooks {
+  text-decoration: underline;
+  background-color: yellow;
+  text-align: center;
 }
 
 .book-author {
@@ -132,17 +190,24 @@ export default {
 }
 
 .purchase-button {
-  background-color: #4caf50;
+  background-color: #2ecc71;
   color: #fff;
   padding: 10px 20px;
-  font-size: 1rem;
+  font-size: 1.2rem;
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  transition: background-color 0.3s ease-in-out;
+  transition: background-color 0.3s ease-in-out, transform 0.2s ease-in-out;
 }
 
 .purchase-button:hover {
-  background-color: #45a049;
+  background-color: #27ae60;
+  transform: scale(1.05);
+}
+
+@media screen and (max-width: 600px) {
+  .book-card {
+    font-size: 1.2rem;
+  }
 }
 </style>
